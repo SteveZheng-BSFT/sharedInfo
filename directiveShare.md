@@ -16,7 +16,7 @@ support|yes/no
 有fade效果 | y
 
 ## 效果预览
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png)
+![alt text](https://github.com/zzs1020/sharedInfo/blob/master/show-message-screenshot.png)
 
 ## 开始编码
 ### step 1:
