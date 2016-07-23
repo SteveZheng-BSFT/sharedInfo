@@ -51,7 +51,7 @@ app.controller('MainCtrl', function() {
 
 ### step 2:
 首先我们来实现主要功能 app.js和short-message.html
-```
+```javascript
 app.directive('showMessage', [ function() {
   return {
     restrict: 'E', 
@@ -69,7 +69,7 @@ app.directive('showMessage', [ function() {
   }
 }]);
 ```
-```
+```html
 <div ng-hide='messageCtrl.isHidden'>
   <a href="" ng-click='messageCtrl.close()'>&times;</a>
   <div ng-transclude></div>
@@ -87,7 +87,7 @@ directive名字写成camel风格的,在html用时写成dash风格的, angular自
 
 ### step 3:
 加样式 在controllerAs:'messageCtrl'后面加逗号和link
-```
+```javascript
 link: function(scope, elem, attrs, messageCtrl) {
       var bgColor = '#DFF0D8';
       var borderColor = '#D6E9C6';
