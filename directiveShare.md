@@ -1,0 +1,142 @@
+An AngularJS 1.x Custom Directive Example```<show-message></show-message>```
+============================================================================
+> 把controllers, html, 对dom的操作全部集成在一个directive主要是为了实现component style, 实现向angular2的迁移。我也注意到1.5增加了angular.component这样一个功能, 不过不管怎么说自定义directive仍然是angular1核心
+
+> 本文的例子基于angular官网例子, 但因为他们是出于解释directive而写的例子, 所以有些东西并没有完全'封装'在directive里面, 所以实际上并不能直接使用, 你可以参考 https://docs.angularjs.org/guide/directive
+
+> 本文完整代码已host在[**plnkr**](http://plnkr.co/edit/yUo4aGckD1ktxl4ngt6p?p=preview)上, 供看官们把玩。本例还有很多不足望指正
+
+## 功能解释 ```<show-message></show-message>``` 
+support|yes/no
+-------|------
+码农指定样式success, warning, danger| y 
+用户关闭气泡| y
+气泡自动消失| y
+根据外部controller提供的信息动态显示名字| y
+有fade效果 | y
+
+## 效果预览
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png)
+
+## 开始编码
+### step 1:
+首先你需要一个app啥的并且引入到html中就不解释了, 大部分plnkr自己生成, 上代码:app.js和index.html
+```javascript
+var app = angular.module('plunker', []);
+
+app.controller('MainCtrl', function() {
+  var self = this;
+  self.name = 'Steve';
+});
+```
+``` html
+<html ng-app="plunker">
+  <head>
+    <meta charset="utf-8" />
+    <title>AngularJS Plunker</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link rel="stylesheet" href="style.css" />
+    <script data-require="angular.js@1.4.x" src="https://code.angularjs.org/1.4.9/angular.js" data-semver="1.4.9"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body ng-controller="MainCtrl">
+      <show-message type='success'> 
+            successfully logged in! Welcome, {{name}}
+      </show-message>
+  </body>
+  </html>
+```
+你需要关注的只有show-message这个标签而已, 类型由程序员自己选定来制定合适的样式(比如登陆成功用success, 失败用danger, 命名跟bootstrap学的), 用来显示的信息放在show-message标签里,并且显示对应的用户名,这里用到transclude的知识,后面会讲。另外你可能注意到我没用$scope,这是为了避免**scope soup**, 简单来说就是当你的代码很多, 在不同ctrl里面都用$scope的话, 以后你查代码的时候, 在html里面你就很难分清哪个属性是哪个ctrl的,难维护。
+
+### step 2:
+首先我们来实现主要功能 app.js和short-message.html
+```
+app.directive('showMessage', [ function() {
+  return {
+    restrict: 'E', 
+    transclude: true, //can visit outside scope
+    scope: {},
+    templateUrl: 'short-message.html',
+    controller: [function() {
+      var self = this;
+      self.isHidden = false;
+      self.close = function() {
+        self.isHidden = true;//when hide, only hide <div> inside <show-message>
+      };
+    }],
+    controllerAs: 'messageCtrl'
+  }
+}]);
+```
+```
+<div ng-hide='messageCtrl.isHidden'>
+  <a href="" ng-click='messageCtrl.close()'>&times;</a>
+  <div ng-transclude></div>
+</div>
+```
+我希望把这个directive做成一个标签而不是一个属性或class, 毕竟用```<show-message>文字</show-message>```看起来更合理些。所以设置restrict:'E',看个人喜好。当然用E, 在设置style的时候会有个小问题需要解决, 导致我之前认为只能用'A'来取代
+
+为什么function用[]包围? 原因是如果直接在()内注入服务的话,最后minify文件的时候可能会出问题,所以一概写成诸如['$scope', function($scope){}]更稳健, 当然在没有注入其他服务时不需要加[],可是保不准你什么时候就想加一个服务呢,到时候再在一堆括号里面添加方括号不是很蛋疼?
+
+directive名字写成camel风格的,在html用时写成dash风格的, angular自动转换识别, 我们凡人不用管。
+
+模版是写在外面文件的, 除非模版内容超级短, 建议写在外面并用templateUrl引用。这个文件就是用div包裹的一个链接+用户自己写的内容。这个a标签显示x的样子,用户点击后调用ctrl的close方法, close方法简单的设置isHidden=false, 得益于angular的2-way data binding, 界面上的ng-hide会自动做出反应。因为我们想这变成一个整体,所以应该把ctrl直接集成在这个directive里面,并且命名为messageCtrl。
+
+至此, 已完成-粗糙地。
+
+### step 3:
+加样式 在controllerAs:'messageCtrl'后面加逗号和link
+```
+link: function(scope, elem, attrs, messageCtrl) {
+      var bgColor = '#DFF0D8';
+      var borderColor = '#D6E9C6';
+      var textColor = '#3C763D';
+
+      if (attrs.type === 'success') { //green style
+        bgColor = '#DFF0D8';
+        borderColor = '#D6E9C6';
+        textColor = '#3C763D';
+      } else if (attrs.type === 'danger') { //red style
+        bgColor = '#F2DEDE';
+        borderColor = '#FFB8B1';
+        textColor = '#D9534F';
+      } else if (attrs.type === 'warning') { //yellow style
+        bgColor = '#FFDDA7';
+        borderColor = '#FFC378';
+        textColor = '#FF6600';
+      }
+
+      elem.css({
+        display: 'block', //must be block, coz show-message will show inline
+        border: 'solid 1px ' + borderColor,
+        borderRadius: '3px',
+        color: textColor,
+        backgroundColor: bgColor,
+        opacity: 1,
+        transition: 'opacity 2s'  //if use all, then will have other style first(black border)
+      });
+      
+      $timeout(function(){
+        elem.css({
+          opacity:0
+        });
+      }, 5000);
+
+      scope.$watch('messageCtrl.isHidden', function(newValue, oldValue) {
+        if(newValue != oldValue) {
+          elem.css({
+            display: 'none'     //if don't none here, show-message still have border style
+          });
+        }
+      })
+
+    }
+```
+通常推荐如果你要直接操作dom的话,不是在ctrl里面,而是在link里面。传递的参数中scope就是你这个directive里面的上下文,elem是调用这个directive的tag,这里就是show-message,attrs是你在tag上写的属性,前面我们加了个type='success'记得吗?attrs.type就可以得到值了, 最后传进去的是你的ctrl。
+
+首先,程序员指定什么type就给什么样式,做个判断。再用css写进去样式的时候注意了得加display:block, 这就是前面说的'E'的问题, 因为你自己做的tag默认不是个块级元素, 所以你的样式显示不出来, 同样如果你设置成'A'的话不加在其他块级元素上也不会正确显示样式,比如span
+
+你可能希望就算用户不点击泡泡也自动消失,就加一个opacity的transition即可, 然后用$timeout让5秒后追加一个css完成。当然你需要在directive里注入$timeout服务。 
+
+可是目前有个小问题, 那就是, 前面hide的都是show-message里面的div, show-message自己变成块级元素后, 自己的边框啥的还是没有被隐藏。所以最后加上一个$watch, 如果div被隐藏了,就设置show-message本身也消失。你可能想问为什么$watch不用注入,因为他是$rootscope的方法,而你在link传进来的scope参数就是继承自rootscope,所以可以用$watch。
