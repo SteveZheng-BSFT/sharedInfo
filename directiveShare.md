@@ -4,7 +4,7 @@ An Angular Custom Directive Example: showMessage
 
 > 本文的例子基于angular官网例子, 但因为他们是出于解释directive而写的例子, 所以有些东西并没有完全'封装'在directive里面, 所以实际上并不能直接使用, 对比参考 https://docs.angularjs.org/guide/directive
 
-> 本文完整代码已host在[**plnkr**](http://plnkr.co/edit/yUo4aGckD1ktxl4ngt6p?p=preview)上, 供看官们把玩。本例还有很多不足望指正
+> 本文完整代码已host在[**plnkr**](http://plnkr.co/edit/yUo4aGckD1ktxl4ngt6p?p=preview)上, 供看官们把玩。本例是自己的一点心得，欢迎分享，还有很多不足望指正。作者github:zzs1020
 
 ## 动机: Refactoring Angular Apps to Component Style
 and make Angular great again -- [原文戳这里](http://teropa.info/blog/2015/10/18/refactoring-angular-apps-to-components.html)
