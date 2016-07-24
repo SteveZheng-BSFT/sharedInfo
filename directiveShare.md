@@ -171,7 +171,14 @@ $timeout(function(){
 
 说了这么多，你一定想吐槽我前面为毛不解释scope，写了个空{}跟不用isolate scope有啥区别？正常情况下如果你只显示一个气泡，没有任何区别。可是如果你像我plnkr上例子一样弄三个出来一起显示就有区别了。现在他们三个分别用了独立的scope，你点击一个气泡的x才不会影响到其他的泡泡。不用isolate scope那他们就是一根绳子上的蚂蚱... =o=
 
-最后，按照angular官话，directives should clean up themselves by using scope/elem.on('$destroy', function(){..}),如果你用了$interval一类的服务。避免内存泄漏。当然我们这里是不需要的。
+最后，按照angular官话，directives should clean up themselves by using scope.$on/elem.on('$destroy', function(){..}),如果你用了$interval一类的服务。避免内存泄漏。~~当然我们这里是不需要的。~~ 划掉的这句话，我觉得既对又错。因为这个directive不会重复执行，最多只会7秒后也结束了，谈不上leak，所以可以不加。但如果说你有一个按钮让(恶意软件)用户不停的点击触发这个泡泡就会有问题了。所以咱们还是加上：
+```js
+scope.$on('$destroy', function(){
+        $timeout.cancel(t1Promise);
+        $timeout.cancel(t2Promise);
+      });
+```
+[戳这看详细解释](http://www.bennadel.com/blog/2548-don-t-forget-to-cancel-timeout-timers-in-your-destroy-events-in-angularjs.htm), 另外一个知识点是angular的$timeout返回的是promise哦，不是js里的id啦，所以你可以拿到这个promise做各种操作，再一次感受promise的强大吧
 
 ### 结尾
 完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
