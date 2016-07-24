@@ -1,8 +1,8 @@
-An AngularJS 1.x Custom Directive Example```<show-message></show-message>```
+An Angular Custom Directive Example: showMessage
 ============================================================================
 > 把controllers, html, 对dom的操作全部集成在一个directive主要是为了实现component style, 实现向angular2的迁移。我也注意到1.5增加了angular.component这样一个功能, 不过不管怎么说自定义directive仍然是angular1核心
 
-> 本文的例子基于angular官网例子, 但因为他们是出于解释directive而写的例子, 所以有些东西并没有完全'封装'在directive里面, 所以实际上并不能直接使用, 你可以参考 https://docs.angularjs.org/guide/directive
+> 本文的例子基于angular官网例子, 但因为他们是出于解释directive而写的例子, 所以有些东西并没有完全'封装'在directive里面, 所以实际上并不能直接使用, 对比参考 https://docs.angularjs.org/guide/directive
 
 > 本文完整代码已host在[**plnkr**](http://plnkr.co/edit/yUo4aGckD1ktxl4ngt6p?p=preview)上, 供看官们把玩。本例还有很多不足望指正
 
@@ -23,7 +23,6 @@ support|yes/no
 首先你需要一个app啥的并且引入到html中就不解释了, 大部分plnkr自己生成, 上代码:app.js和index.html
 ```javascript
 var app = angular.module('plunker', []);
-
 app.controller('MainCtrl', function() {
   var self = this;
   self.name = 'Steve';
@@ -32,11 +31,7 @@ app.controller('MainCtrl', function() {
 ``` html
 <html ng-app="plunker">
   <head>
-    <meta charset="utf-8" />
-    <title>AngularJS Plunker</title>
-    <script>document.write('<base href="' + document.location + '" />');</script>
-    <link rel="stylesheet" href="style.css" />
-    <script data-require="angular.js@1.4.x" src="https://code.angularjs.org/1.4.9/angular.js" data-semver="1.4.9"></script>
+    <!--已省略其他meta/title/script标签-->
     <script src="app.js"></script>
   </head>
 
@@ -77,7 +72,7 @@ app.directive('showMessage', [ function() {
 ```
 我希望把这个directive做成一个标签而不是一个属性或class, 毕竟用```<show-message>文字</show-message>```看起来更合理些。所以设置restrict:'E',看个人喜好。当然用E, 在设置style的时候会有个小问题需要解决, 导致我之前认为只能用'A'来取代
 
-为什么function用[]包围? 原因是如果直接在()内注入服务的话,最后minify文件的时候可能会出问题,所以一概写成诸如['$scope', function($scope){}]更稳健, 当然在没有注入其他服务时不需要加[],可是保不准你什么时候就想加一个服务呢,到时候再在一堆括号里面添加方括号不是很蛋疼?
+为什么function用[]包围? 原因是如果直接在()内注入服务的话,最后minify文件的时候**一定会出问题**,所以一概写成诸如['$scope', function($scope){}]更稳健, 当然在没有注入其他服务时不需要加[],可是保不准你什么时候就想加一个服务呢,到时候再在一堆括号里面添加方括号不是很蛋疼?
 
 directive名字写成camel风格的,在html用时写成dash风格的, angular自动转换识别, 我们凡人不用管。
 
@@ -133,10 +128,13 @@ link: function(scope, elem, attrs, messageCtrl) {
 
     }
 ```
-通常推荐如果你要直接操作dom的话,不是在ctrl里面,而是在link里面。传递的参数中scope就是你这个directive里面的上下文,elem是调用这个directive的tag,这里就是show-message,attrs是你在tag上写的属性,前面我们加了个type='success'记得吗?attrs.type就可以得到值了, 最后传进去的是你的ctrl。
+通常推荐如果你要直接操作dom的话,不是在ctrl里面,而是在link里面。传递的参数中scope就是你这个directive里面的上下文,elem是调用这个directive的tag,这里就是show-message,attrs是你在tag上写的属性,还记得前面我们加了个type='success'吗?attrs.type就可以得到值了, 最后传进去的是你的ctrl。
 
-首先,程序员指定什么type就给什么样式,做个判断。再用css写进去样式的时候注意了得加display:block, 这就是前面说的'E'的问题, 因为你自己做的tag默认不是个块级元素, 所以你的样式显示不出来, 同样如果你设置成'A'的话不加在其他块级元素上也不会正确显示样式,比如span
+首先,程序员指定什么type就给什么样式,做个判断。再用css写进去样式的时候注意得加display:block, 这就是前面说的'E'的问题, 因为你自己做的tag默认不是个块级元素, 所以你的样式显示不出来, 同样如果你设置成'A'的话不加在其他块级元素上也不会正确显示样式,比如span
 
-你可能希望就算用户不点击泡泡也自动消失,就加一个opacity的transition即可, 然后用$timeout让5秒后追加一个css完成。当然你需要在directive里注入$timeout服务。 
+你可能希望就算用户不点击泡泡也自动消失,就加一个opacity的transition即可, 然后用$timeout让5秒后设置css-display-none完成。当然你需要在directive里注入$timeout服务。 
 
-可是目前有个小问题, 那就是, 前面hide的都是show-message里面的div, show-message自己变成块级元素后, 自己的边框啥的还是没有被隐藏。所以最后加上一个$watch, 如果div被隐藏了,就设置show-message本身也消失。你可能想问为什么$watch不用注入,因为他是$rootscope的方法,而你在link传进来的scope参数就是继承自rootscope,所以可以用$watch。
+可是目前有个小问题, 那就是, show-message自己变成块级元素后, 前面hide的都是show-message '里面' 的div,  自己的边框啥的还是没有被隐藏。所以最后加上一个$watch, 判断如果里面div被隐藏了,就设置show-message本身也消失。你可能想问为什么$watch不用注入,因为他是$rootscope的方法,而你在link传进来的scope参数就是继承自rootscope,所以可以用$watch。
+
+### 结尾
+完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
