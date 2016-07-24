@@ -167,7 +167,7 @@ $timeout(function(){
         });
       }, 7000); 
 ```
-个人觉得很可能还有更好的办法在这，如果知道请告诉我！
+个人觉得很可能还有更好的办法在这，如果知道请点击上方github issue告诉我！
 
 ### 结尾
 完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
