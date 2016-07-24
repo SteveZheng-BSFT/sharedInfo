@@ -181,4 +181,4 @@ scope.$on('$destroy', function(){
 [戳这看详细解释](http://www.bennadel.com/blog/2548-don-t-forget-to-cancel-timeout-timers-in-your-destroy-events-in-angularjs.htm), 另外一个知识点是angular的$timeout返回的是promise哦，不是js里的id啦，所以你可以拿到这个promise做各种操作，再一次感受promise的强大吧
 
 ### 结尾
-完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
+完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。科科
