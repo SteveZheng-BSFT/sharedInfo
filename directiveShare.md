@@ -141,15 +141,6 @@ link: function(scope, elem, attrs, messageCtrl) {
           opacity:0
         });
       }, 5000);
-
-      scope.$watch('messageCtrl.isHidden', function(newValue, oldValue) {
-        if(newValue != oldValue) {
-          elem.css({
-            display: 'none'     //if don't none here, show-message still have border style
-          });
-        }
-      })
-
     }
 ```
 通常推荐如果你要直接操作dom的话,不是在ctrl里面,而是在link里面。传递的参数中scope就是你这个directive里面的上下文,elem是调用这个directive的tag,这里就是show-message,attrs是你在tag上写的属性,还记得前面我们加了个type='success'吗?attrs.type就可以得到值了, 最后传进去的是你的ctrl。
@@ -158,7 +149,25 @@ link: function(scope, elem, attrs, messageCtrl) {
 
 你可能希望就算用户不点击泡泡也自动消失,就加一个opacity的transition即可, 然后用$timeout让5秒后设置css-display-none完成。当然你需要在directive里注入$timeout服务。 
 
-可是目前有个小问题, 那就是, show-message自己变成块级元素后, 前面hide的都是show-message '里面' 的div,  自己的边框啥的还是没有被隐藏。所以最后加上一个$watch, 判断如果里面div被隐藏了,就设置show-message本身也消失。你可能想问为什么$watch不用注入,因为他是$rootscope的方法,而你在link传进来的scope参数就是继承自rootscope,所以可以用$watch。
+可是目前有2个小问题, 1.那就是, show-message自己变成块级元素后, 前面hide的都是show-message '里面' 的div,  自己的边框啥的还是没有被隐藏。所以最后加上一个$watch, 判断如果里面div被隐藏了,就设置show-message本身也消失。你可能想问为什么$watch不用注入,因为他是$rootscope的方法,而你在link传进来的scope参数就是继承自rootscope,所以可以用$watch。
+```js
+scope.$watch('messageCtrl.isHidden', function(newValue, oldValue) {
+        if(newValue != oldValue) {
+          elem.css({
+            display: 'none'     //if don't none here, show-message still have border style
+          });
+        }
+      })
+```
+2是你发现元素只是隐藏了，木有消失，还占着地方呢！这里我用了个笨办法再加一个timeout 7秒后等fade效果结束后再设置display:none
+```js
+$timeout(function(){
+        elem.css({
+          display: 'none'
+        });
+      }, 7000); 
+```
+个人觉得很可能还有更好的办法在这，如果知道请告诉我！
 
 ### 结尾
 完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
