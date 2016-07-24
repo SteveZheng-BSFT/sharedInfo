@@ -94,7 +94,7 @@ app.directive('showMessage', [ function() {
   <div ng-transclude></div>
 </div>
 ```
-我希望把这个directive做成一个标签而不是一个属性或class, 毕竟用```<show-message>文字</show-message>```看起来更合理些。所以设置restrict:'E',看个人喜好。当然用E, 在设置style的时候会有个小问题需要解决, 导致我之前认为只能用'A'来取代
+我希望把这个directive做成一个标签而不是一个属性或class, 毕竟用```<show-message>文字</show-message>```看起来更合理些。所以设置restrict:'E'。如果用E, 在设置style的时候会有个小问题需要解决, 导致我之前认为只能用'A'来取代，后面会说
 
 为什么function用[]包围? 原因是如果直接在()内注入服务的话,最后minify文件的时候**一定会出问题**,所以一概写成诸如['$scope', function($scope){}]更稳健, 当然在没有注入其他服务时不需要加[],可是保不准你什么时候就想加一个服务呢,到时候再在一堆括号里面添加方括号不是很蛋疼?
 
@@ -168,6 +168,8 @@ $timeout(function(){
       }, 7000); 
 ```
 个人觉得很可能还有更好的办法在这，如果知道请点击上方github issue告诉我！
+
+说了这么多，你一定想吐槽我前面为毛不解释scope，写了个空{}跟不用isolate scope有啥区别？正常情况下如果你只显示一个气泡，没有任何区别。可是如果你像我plnkr上例子一样弄三个出来一起显示就有区别了。现在他们三个分别用了独立的scope，你点击一个气泡的x才不会影响到其他的泡泡。不用isolate scope那他们就是一根绳子上的蚂蚱... =o=
 
 最后，按照angular官话，directives should clean up themselves by using scope/elem.on('$destroy', function(){..}),如果你用了$interval一类的服务。避免内存泄漏。当然我们这里是不需要的。
 
