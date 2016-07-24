@@ -6,6 +6,30 @@ An Angular Custom Directive Example: showMessage
 
 > 本文完整代码已host在[**plnkr**](http://plnkr.co/edit/yUo4aGckD1ktxl4ngt6p?p=preview)上, 供看官们把玩。本例还有很多不足望指正
 
+## 动机: Refactoring Angular Apps to Component Style
+and make Angular great again -- [原文戳这里](http://teropa.info/blog/2015/10/18/refactoring-angular-apps-to-components.html)
+
+简而言之，你面试的时候说你用如下目录结构估计没人要你了：
+
+- app/
+  - controllers/
+    - xxCtrl.js
+  - directives/
+    - xxDirective.js
+  - services/
+    - xxService.js
+  ....
+
+而都做成component的形式易于维护＋重用（DRY）
+- app/
+  - components/
+    - messageComponent/
+      - short-message.html
+      - showMessageDirective.js
+  ....
+
+都是为了顺应时代的变化，建议看看那篇原文写得不错，虽不能直接像react或angular2那么方便地component，但我们也不能自暴自弃啊
+
 ## 功能解释 ```<show-message></show-message>``` 
 support|yes/no
 -------|------
