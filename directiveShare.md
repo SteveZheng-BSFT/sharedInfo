@@ -169,5 +169,7 @@ $timeout(function(){
 ```
 个人觉得很可能还有更好的办法在这，如果知道请点击上方github issue告诉我！
 
+最后，按照angular官话，directives should clean up themselves by using scope/elem.on('$destroy', function(){..}),如果你用了$interval一类的服务。避免内存泄漏。当然我们这里是不需要的。
+
 ### 结尾
 完成。现在你就可以把这个directive单独放在一个文件里面，带上short-message.html，一起放在某个文件夹下并命名messageComponent，而这文件夹就是所谓的能提供单独功能性的模块，到处reuse了。
