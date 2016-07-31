@@ -3,7 +3,7 @@
 
 > 相对于chart.js,美观上和响应式上并不逊色。但是当我使用chartjs时，第一件事让我干的竟然是写个```<canvas></canvas>```,而且还要加上宽度高度！？excuse me？你不是responsive么－_－||. 而且js里还要让我写getElementById blah blah!!何其不爽。。（当然也可以直接$）
 
-> 吐槽完毕，以上只是非常表面的对比，具体还请自行研究～那来看看c3是怎么简便易用的吧.
+> 吐槽完毕，以上只是非常表面的对比，具体还请自行研究～那来看看c3是怎么简便易用的吧.(这里只介绍直线图，c3还提供很多图形，看这里 http://c3js.org/examples.html)。本例是自己的一点心得，欢迎分享，还有很多不足望指正。作者github:zzs1020
 
 ## Setup
 ```
@@ -34,7 +34,7 @@ var chart = c3.generate({
 });
 ```
 c3也支持AMD API, 如果你用requirejs，也可以相应地load ---> 自己看官网doc
-![贴张效果图：]()
+![chart 1](https://github.com/zzs1020/sharedInfo/blob/master/chart1.png)
 
 ## Customize chart
 你可以自定义很多其他部分：1. Additional Axis 2. Show Axis Label 3. Change Chart Type 4. Format values 。。。
@@ -75,7 +75,7 @@ var chart = c3.generate({
     }
 });
 ```
-![效果图]()
+![chart 2](https://github.com/zzs1020/sharedInfo/blob/master/chart2.png)
 关于自定义样式也可以在css文件里加样式就可以啦，线条变粗神马的好羞射
 ```css
 #chart .c3-line-data2 {
@@ -94,7 +94,7 @@ chart.load({
 });
 ```
 所以当你设置个按钮给第一个例子，点击load时，图表的数据就会更新成新的并自动绘制，自带fade效果，如下
-![]
+![chart 3](https://github.com/zzs1020/sharedInfo/blob/master/chart3.png)
 自然也有unload方法，
 ```js
 chart.unload({
