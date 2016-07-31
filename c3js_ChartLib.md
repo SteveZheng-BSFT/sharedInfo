@@ -1,5 +1,5 @@
 #C3.js: a D3-based chart lib
-> C3是一款用于html5上绘制图表的库，基于d3这种高端的库而设计，但是大大减少了使用复杂度。他的依赖文件也只有d3，引入c3时先引入d3即可
+> C3是一款用于html5上绘制图表的库，基于d3这种高端的库而设计，但是大大减少了使用复杂度。他的依赖文件也只有d3，引入c3时先引入d3即可。这里简单地引用了所有官网的教程代码，[戳原文](http://c3js.org/gettingstarted.html)
 
 > 相对于chart.js,美观上和响应式上并不逊色。但是当我使用chartjs时，第一件事让我干的竟然是写个```<canvas></canvas>```,而且还要加上宽度高度！？excuse me？你不是responsive么－_－||. 而且js里还要让我写getElementById blah blah!!何其不爽。。（当然也可以直接$）
 
