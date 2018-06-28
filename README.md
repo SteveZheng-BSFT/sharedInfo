@@ -5,3 +5,4 @@ Some shared blogs
 
 1. https://github.com/zzs1020/sharedInfo/blob/master/directiveShare.md
 2. https://github.com/zzs1020/sharedInfo/blob/master/c3js_ChartLib.md
+3. https://github.com/SteveZheng-BSFT/sharedInfo/blob/master/debounce%26throttleSummary.md
